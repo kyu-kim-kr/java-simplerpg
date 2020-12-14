@@ -5,8 +5,12 @@ class Game {
     private final String PLAYER = "P ";
     private final String BACKGROUND = "* ";
     private final String MINE = "M ";
+    private final String MONSTER = "O ";
+
     private int mine_x;
     private int mine_y;
+    private int monster_x;
+    private int monster_y;
 
     private final String[][] map = new String[11][11];
     private final Scanner sc = new Scanner(System.in);
@@ -18,6 +22,7 @@ class Game {
         initMap();
         initPlayer();
         initMine();
+        initMonster();
 
         while (true) {
             printAll();
@@ -66,6 +71,17 @@ class Game {
         System.out.println("원하는 방향(W,A,S,D)을 입력해주세요.");
         dir = sc.next().charAt(0);
         // TODO : WASD 중 다른 방향이 들어왔을 때, 다시 입력받기
+    }
+
+    private void initMonster() {
+        monster_x = rd.nextInt(10) - 1;
+        monster_y = rd.nextInt(10) - 1;
+        map[monster_x][monster_y] = MONSTER;
+        while (monster_x == 5 && monster_y == 5 || monster_x == mine_x && monster_y == mine_y) {
+            monster_x = rd.nextInt(10) - 1;
+            monster_y = rd.nextInt(10) - 1;
+            map[monster_x][monster_y] = MONSTER;
+        }
     }
 
     private void initMine() {
