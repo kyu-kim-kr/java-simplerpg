@@ -5,6 +5,8 @@ class Game {
     private final String PLAYER = "P ";
     private final String BACKGROUND = "* ";
     private final String MINE = "M ";
+    private int mine_x;
+    private int mine_y;
 
     private final String[][] map = new String[11][11];
     private final Scanner sc = new Scanner(System.in);
@@ -68,14 +70,13 @@ class Game {
 
     private void initMine() {
         // TODO : 나중에 마인 여러개 만들기
-        int row, col;
-        row = rd.nextInt(10) - 1;
-        col = rd.nextInt(10) - 1;
-        map[row][col] = MINE;
-        while (row == 5 && col == 5) {
-            row = rd.nextInt(10) - 1;
-            col = rd.nextInt(10) - 1;
-            map[row][col] = MINE;
+        mine_x = rd.nextInt(10) - 1;
+        mine_y = rd.nextInt(10) - 1;
+        map[mine_x][mine_y] = MINE;
+        while (mine_x == 5 && mine_y == 5) {
+            mine_x = rd.nextInt(10) - 1;
+            mine_y = rd.nextInt(10) - 1;
+            map[mine_x][mine_y] = MINE;
         }
     }
 
@@ -101,20 +102,16 @@ class Game {
     }
 
     private void endGame() {
-        int temp1 = 0, temp2 = 1, temp3 = 2, temp4 = 3;
+        int temp1 = 0, temp2 = 1;
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
                 if (map[i][j].equals(PLAYER)) {
                     temp1 = i;
                     temp2 = j;
                 }
-                if (map[i][j].equals(MINE)) {
-                    temp3 = i;
-                    temp4 = j;
-                }
             }
         }
-        if (temp1 == temp3 && temp2 == temp4){
+        if (temp1 == mine_x && temp2 == mine_y){
             System.out.println("지뢰를 밟았습니다.");
             System.exit(0);
         }
