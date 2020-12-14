@@ -21,6 +21,7 @@ class Game {
             printAll();
             getDirPlayer();
             movePlayer(dir);
+            endGame();
         }
     }
 
@@ -96,6 +97,26 @@ class Game {
                 System.out.print(ee);
             }
             System.out.println();
+        }
+    }
+
+    private void endGame() {
+        int temp1 = 0, temp2 = 1, temp3 = 2, temp4 = 3;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (map[i][j].equals(PLAYER)) {
+                    temp1 = i;
+                    temp2 = j;
+                }
+                if (map[i][j].equals(MINE)) {
+                    temp3 = i;
+                    temp4 = j;
+                }
+            }
+        }
+        if (temp1 == temp3 && temp2 == temp4){
+            System.out.println("지뢰를 밟았습니다.");
+            System.exit(0);
         }
     }
 }
