@@ -21,7 +21,7 @@ class Game {
     }
 
     private void movePlayer(char dir) {
-        int[] locationPlayer = searchPlayer();
+        int[] locationPlayer = retrievePlayer();
         map[locationPlayer[0]][locationPlayer[1]] = BACKGROUND;
         switch (dir) {
             case 'W':
@@ -39,7 +39,7 @@ class Game {
         }
     }
 
-    private int[] searchPlayer() {
+    private int[] retrievePlayer() {
         int row = 0;
         int col = 0;
         for (int i = 0; i < map.length; i++) {
