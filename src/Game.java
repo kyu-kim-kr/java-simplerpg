@@ -74,11 +74,11 @@ class Game {
     }
 
     private void initMonster() {
-        monster_x = rd.nextInt(10) - 1;
-        monster_y = rd.nextInt(10) - 1;
+        monster_x = rd.nextInt(11);
+        monster_y = rd.nextInt(11);
         while (monster_x == 5 && monster_y == 5 || monster_x == mine_x && monster_y == mine_y) {
-            monster_x = rd.nextInt(10) - 1;
-            monster_y = rd.nextInt(10) - 1;
+            monster_x = rd.nextInt(11);
+            monster_y = rd.nextInt(11);
             map[monster_x][monster_y] = MONSTER;
         }
         map[monster_x][monster_y] = MONSTER;
@@ -86,11 +86,11 @@ class Game {
 
     private void initMine() {
         // TODO : 나중에 마인 여러개 만들기
-        mine_x = rd.nextInt(10) - 1;
-        mine_y = rd.nextInt(10) - 1;
+        mine_x = rd.nextInt(11);
+        mine_y = rd.nextInt(11);
         while (mine_x == 5 && mine_y == 5) {
-            mine_x = rd.nextInt(10) - 1;
-            mine_y = rd.nextInt(10) - 1;
+            mine_x = rd.nextInt(11);
+            mine_y = rd.nextInt(11);
             map[mine_x][mine_y] = MINE;
         }
         map[mine_x][mine_y] = MINE;
