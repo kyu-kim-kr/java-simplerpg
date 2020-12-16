@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -7,8 +8,12 @@ class Game {
     private final String MINE = "M ";
     private final String MONSTER = "O ";
 
-    private int mine_x;
-    private int mine_y;
+    private boolean playerMeetMonster = false;
+
+    private final ArrayList<Integer> mine_x = new ArrayList<>();
+    private final ArrayList<Integer> mine_y = new ArrayList<>();
+    private int numMine = 1;
+
     private int monster_x;
     private int monster_y;
 
@@ -19,19 +24,71 @@ class Game {
     private char dir;
 
     Game() {
-        initMap();
-        initPlayer();
-        initMine();
-        initMonster();
+        createGame();
 
         while (true) {
             printAll();
             getDirPlayer();
             movePlayer(dir);
-            endGame();
+            retrievePlayerNMine();
+            retrievePlayerNMonster();
         }
     }
 
+    private void createGame() {
+        initMap();
+        initPlayer();
+        initMine();
+        initMonster();
+    }
+
+    private void retrievePlayerNMonster() {
+        int temp1 = 0, temp2 = 1;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (map[i][j].equals(MONSTER)) {
+                    temp1 = i;
+                    temp2 = j;
+                }
+            }
+        }
+        if (temp1 == monster_x && temp2 == monster_y) {
+            playerMeetMonster = true;
+            createGame();
+        }
+    }
+
+    private void retrievePlayerNMine() {
+        int temp1 = 0, temp2 = 1;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (map[i][j].equals(PLAYER)) {
+                    temp1 = i;
+                    temp2 = j;
+                }
+            }
+        }
+        for (int i = 0; i < numMine; i++) {
+            if (temp1 == mine_x.get(i) && temp2 == mine_y.get(i)) {
+                System.out.println("지뢰를 밟았습니다.");
+                System.exit(0);
+            }
+        }
+    }
+
+    private int[] retrievePlayer() {
+        int row = 0;
+        int col = 0;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (map[i][j].equals(PLAYER)) {
+                    row = i;
+                    col = j;
+                }
+            }
+        }
+        return new int[]{row, col};
+    }
 
     private void movePlayer(char dir) {
         // TODO : 배열 벗어나지 않도록 조건문 만들기
@@ -53,20 +110,6 @@ class Game {
         }
     }
 
-    private int[] retrievePlayer() {
-        int row = 0;
-        int col = 0;
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map.length; j++) {
-                if (map[i][j].equals(PLAYER)) {
-                    row = i;
-                    col = j;
-                }
-            }
-        }
-        return new int[]{row, col};
-    }
-
     private void getDirPlayer() {
         System.out.println("원하는 방향(W,A,S,D)을 입력해주세요.");
         dir = sc.next().charAt(0);
@@ -76,24 +119,32 @@ class Game {
     private void initMonster() {
         monster_x = rd.nextInt(11);
         monster_y = rd.nextInt(11);
-        while (monster_x == 5 && monster_y == 5 || monster_x == mine_x && monster_y == mine_y) {
-            monster_x = rd.nextInt(11);
-            monster_y = rd.nextInt(11);
-            map[monster_x][monster_y] = MONSTER;
+        for (int i = 0; i < numMine; i++) {
+            while (monster_x == mine_x.get(i) && monster_y == mine_y.get(i) || monster_x == 5 && monster_y == 5) {
+                monster_x = rd.nextInt(11);
+                monster_y = rd.nextInt(11);
+                map[monster_x][monster_y] = MONSTER;
+            }
         }
         map[monster_x][monster_y] = MONSTER;
     }
 
     private void initMine() {
-        // TODO : 나중에 마인 여러개 만들기
-        mine_x = rd.nextInt(11);
-        mine_y = rd.nextInt(11);
-        while (mine_x == 5 && mine_y == 5) {
-            mine_x = rd.nextInt(11);
-            mine_y = rd.nextInt(11);
-            map[mine_x][mine_y] = MINE;
+        for (int i = 0; i < numMine; i++) {
+            mine_x.add(rd.nextInt(11));
+            mine_y.add(rd.nextInt(11));
+            //TODO : 같은 위치의 마인 처리하기
+            while (mine_x.get(i) == 5 && mine_y.get(i) == 5) {
+                mine_x.add(rd.nextInt(11));
+                mine_y.add(rd.nextInt(11));
+                map[mine_x.get(i)][mine_y.get(i)] = MINE;
+            }
+            map[mine_x.get(i)][mine_y.get(i)] = MINE;
         }
-        map[mine_x][mine_y] = MINE;
+
+        if (playerMeetMonster) {
+            numMine = numMine * 2;
+        }
     }
 
     private void initMap() {
@@ -117,19 +168,5 @@ class Game {
         }
     }
 
-    private void endGame() {
-        int temp1 = 0, temp2 = 1;
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map.length; j++) {
-                if (map[i][j].equals(PLAYER)) {
-                    temp1 = i;
-                    temp2 = j;
-                }
-            }
-        }
-        if (temp1 == mine_x && temp2 == mine_y){
-            System.out.println("지뢰를 밟았습니다.");
-            System.exit(0);
-        }
-    }
+
 }
